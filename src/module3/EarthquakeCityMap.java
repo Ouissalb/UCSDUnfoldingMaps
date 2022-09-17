@@ -39,6 +39,12 @@ public class EarthquakeCityMap extends PApplet {
 	public static final float THRESHOLD_MODERATE = 5;
 	// Less than this threshold is a minor earthquake
 	public static final float THRESHOLD_LIGHT = 4;
+	//radius of minor earthquakes
+	public static final float RADIUS_MINOR = 4;
+	//radius of moderate earthquakes
+	public static final float RADIUS_LIGHT = 8;
+	//radius of  earthquakes
+	public static final float RADIUS_HIGH = 16;
 
 	/** This is where to find the local tiles, for working without an Internet connection */
 	public static String mbTilesString = "blankLight-1-3.mbtiles";
@@ -72,6 +78,11 @@ public class EarthquakeCityMap extends PApplet {
 	    //Use provided parser to collect properties for each earthquake
 	    //PointFeatures have a getLocation method
 	    List<PointFeature> earthquakes = ParseFeed.parseEarthquake(this, earthquakesURL);
+	    
+	    for (PointFeature pointfeature : earthquakes)
+	    {
+	    	markers.add(createMarker(pointfeature));
+	    }
 	    
 	    //TODO (Step 3): Add a loop here that calls createMarker (see below) 
 	    // to create a new SimplePointMarker for each PointFeature in 
@@ -107,7 +118,23 @@ public class EarthquakeCityMap extends PApplet {
 		
 		// Here is an example of how to use Processing's color method to generate 
 	    // an int that represents the color yellow.  
-	    int yellow = color(255, 255, 0);
+	    int yellow = color(230, 215, 53);
+	    int blue= color(16, 178, 181);
+	    int red = color(232, 39, 26);
+	    
+	    if(mag < THRESHOLD_LIGHT){
+	    	marker.setRadius(RADIUS_MINOR);
+	    	marker.setColor(yellow);
+	    	
+	    }else if(mag >= THRESHOLD_LIGHT && mag < THRESHOLD_MODERATE ) {
+	    	marker.setRadius(RADIUS_LIGHT);
+	    	marker.setColor(blue);
+	    }
+	    else {
+	    	marker.setRadius(RADIUS_HIGH);
+	    	marker.setColor(red);
+	    }
+	    
 		
 		// TODO (Step 4): Add code below to style the marker's size and color 
 	    // according to the magnitude of the earthquake.  
@@ -134,6 +161,34 @@ public class EarthquakeCityMap extends PApplet {
 	private void addKey() 
 	{	
 		// Remember you can use Processing's graphics methods here
-	
+		stroke(159,214,228);
+		strokeWeight(4); 
+		
+	    int yellow = color(230, 215, 53);
+	    int blue= color(16, 178, 181);
+	    int red = color(232, 39, 26);
+	    
+		int black = color(0, 0, 0); 
+		fill(black);
+		rect(15,57,170,width/4);
+		int white = color(255, 255, 255); 
+		fill(white);
+			
+		noStroke(); 
+		text("Earthquake key",45,80);
+		text("5.0+ Magnitude",60,130);
+		fill(red);
+		ellipse(40,130,RADIUS_HIGH,RADIUS_HIGH);
+		
+		fill(white);
+		text("4.0+ Magnitude",60,170);
+		fill(blue);
+		ellipse(40,170,RADIUS_LIGHT,RADIUS_LIGHT);
+		fill(white);
+		text("Below 4.0",60,210);
+		fill(yellow);
+		ellipse(40,210,RADIUS_MINOR,RADIUS_MINOR);
+		
+		
 	}
 }
